@@ -47,6 +47,7 @@ export default styles = StyleSheet.create({
       alignItems: 'flex-start',
       width: '90%',
       marginBottom: 5,
+      
     },
     Texto:{
       fontSize: 16,

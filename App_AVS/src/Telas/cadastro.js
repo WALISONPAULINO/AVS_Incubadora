@@ -1,8 +1,9 @@
 import {Text, View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, Button, Alert} from 'react-native'
 
 import styles from './Styles_Index'
+import style from './Styles_cadastro'
 
-export function Index ({navigation}){
+export function Cadastro ({navigation}){
     return(    
         <KeyboardAvoidingView style={styles.background}>
             <View style={styles.Logo}>
@@ -13,32 +14,43 @@ export function Index ({navigation}){
 
             <View style={styles.Container}>
                 <View style={styles.Text_campo}> 
-                    <Text style={styles.Texto}>E-mail</Text>
+                    <Text style={styles.Texto}>Nome</Text>
                 </View>
                 <TextInput style={styles.Input_email}
+                    placeholder='Digite seu nome'
+                />
+
+                <View style={styles.Text_campo}> 
+                    <Text style={styles.Texto}>E-mail</Text>
+                </View>
+                <TextInput  style={style.Input_senha}
                     placeholder='Digite seu e-mail'
                 />
 
                 <View style={styles.Text_campo}> 
                     <Text style={styles.Texto}>Senha</Text>
                 </View>
+                <TextInput style={styles.Input_email}
+                    placeholder='Digite sua senha'
+                />
+
+                <View style={styles.Text_campo}> 
+                    <Text style={styles.Texto}>Confirme sua senha</Text>
+                </View>
                 <TextInput  style={styles.Input_senha}
                     placeholder='Digite sua senha'
                 />
-                <View style={styles.Text_senha}> 
-                    <Text style={styles.esqueci_Senha}>Esqueci minha senha</Text>
-                </View>
                 
                 <TouchableOpacity style={styles.Botao_entrar}
                     title='página sobre'
                     onPress={()=> 
-                        navigation.navigate('Cadastro')
+                        navigation.navigate('Sobre')
                     }>
-                    <Text style={styles.Texto_entrar}>Entrar</Text>
+                    <Text style={styles.Texto_entrar}>Cadastrar</Text>
                 </TouchableOpacity>
 
                 <View>
-                    <Text style={styles.esqueci_Senha}>Não tem uma conta? Registre-se</Text>
+                    <Text style={styles.esqueci_Senha}>Já tem uma conta? Faça login</Text>
                 </View>
 
             </View>
