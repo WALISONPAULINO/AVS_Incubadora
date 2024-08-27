@@ -81,6 +81,18 @@ export default styles = StyleSheet.create({
     Texto_entrar:{
       color: '#FFF',
       fontSize: 16,
-    }
+    },
+
+    Input_False:{
+      backgroundColor:'#A3ACB9',
+      width: '90%',
+      marginBottom: 5,
+      color: '#222',
+      fontSize: 17,
+      borderRadius: 8,
+      padding: 12,
+      elevation: 10
+    },
+    
   });
   

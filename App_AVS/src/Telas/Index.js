@@ -1,5 +1,6 @@
 import {Text, View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, StatusBar} from 'react-native'
 import React, { useState } from 'react';
+
 import styles from './Styles_Index'
 import firebase from '../firebaseConnection';
 
@@ -44,6 +45,7 @@ export function Index ({navigation}){
                 </View>
                 <TextInput onChangeText={texto => setSenha(texto)} style={styles.Input_senha}
                     placeholder='Digite sua senha'
+                    secureTextEntry={true} // Ativa a máscara de senha
                 />
 
                 <View style={styles.Text_senha}> 
@@ -51,7 +53,7 @@ export function Index ({navigation}){
                 </View>
 
                 {/* Botão de login: */}
-                <TouchableOpacity style={styles.Botao_entrar} title='página sobre' onPress={login}>
+                <TouchableOpacity style={styles.Botao_entrar} title='página login' onPress={login}>
                     <Text style={styles.Texto_entrar}>Entrar</Text>
                 </TouchableOpacity>
 
