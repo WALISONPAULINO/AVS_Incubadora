@@ -11,6 +11,7 @@ export default styles = StyleSheet.create({
     Logo:{
       flex:1,
       justifyContent:'center',
+      alignItems:'center',
       marginTop: 40
     },
 
@@ -18,7 +19,7 @@ export default styles = StyleSheet.create({
       flex:3,
       alignItems:'center',
       justifyContent:'center',
-      width: '90%'
+      width: '100%'
     },
 
     Input_email:{
