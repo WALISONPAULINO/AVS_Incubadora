@@ -11,7 +11,7 @@ const stack = createNativeStackNavigator();
 export default function App() {
   return (
    <NavigationContainer>
-      <stack.Navigator initialRouteName="Cadastro_Ciclo">
+      <stack.Navigator initialRouteName="Home">
           <stack.Screen name='Index' options={{
             title: '',
             headerTransparent: true,

@@ -9,10 +9,9 @@ export default styles = StyleSheet.create({
     },
 
     Logo:{
-      flex:1,
       justifyContent:'center',
       alignItems:'center',
-      marginTop: 40
+      marginTop: 40,
     },
 
     Container:{
@@ -20,7 +19,6 @@ export default styles = StyleSheet.create({
       alignItems:'center',
       justifyContent:'center',
       width: '100%',
-      backgroundColor:'red'
     },
 
     Input_email:{

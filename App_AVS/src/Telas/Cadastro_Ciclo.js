@@ -15,6 +15,11 @@ export function Cadastro_Ciclo ({navigation}){
                     />
                 </View>
 
+                <View style={style.titulo_ciclo}>
+                    <Text style={style.Texto_ciclo}>Adicione um novo ciclo</Text>
+                    <Text style={style.Texto_ciclo}>de incubação</Text>
+                </View>
+
                 <View style={style.container_picker}>
                     <Text style={style.label}>Espécie</Text>
                     <Picker
