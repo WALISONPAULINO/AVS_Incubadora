@@ -19,7 +19,8 @@ export default styles = StyleSheet.create({
       flex:3,
       alignItems:'center',
       justifyContent:'center',
-      width: '100%'
+      width: '100%',
+      backgroundColor:'red'
     },
 
     Input_email:{
@@ -89,10 +90,23 @@ export default styles = StyleSheet.create({
       width: '90%',
       marginBottom: 5,
       color: '#222',
-      fontSize: 17,
+      fontSize: 22,
       borderRadius: 8,
-      padding: 12,
+      padding: 18,
       elevation: 10
+    },
+    
+    label: {
+      fontSize: 18,
+      marginBottom: 10,
+    },
+    picker: {
+        height: 50,
+        width: '100%',
+    },
+    text: {
+        marginTop: 20,
+        fontSize: 18,
     },
     
   });

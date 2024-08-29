@@ -1,5 +1,6 @@
 import {Text, View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, StatusBar} from 'react-native'
 import React, { useState } from 'react';
+import {Ionicons} from '@expo/vector-icons';
 
 import styles from './Styles_Index'
 import firebase from '../firebaseConnection';
@@ -47,6 +48,7 @@ export function Index ({navigation}){
                     placeholder='Digite sua senha'
                     secureTextEntry={true} // Ativa a máscara de senha
                 />
+
 
                 <View style={styles.Text_senha}> 
                     <Text style={styles.esqueci_Senha}>Esqueci minha senha</Text>

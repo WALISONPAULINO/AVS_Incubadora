@@ -11,4 +11,30 @@ export default style = StyleSheet.create({
         padding: 12,
         elevation: 10
       },
+
+    container_picker: {
+        justifyContent: 'center',
+        width:'90%',
+        marginLeft:20,
+    },
+
+    label: {
+        fontSize: 17,
+        marginBottom: 8,
+    },
+    picker: {
+        backgroundColor:'#FFF',
+        width: '100%',
+        color: '#222',
+        fontSize: 17,
+        padding: 12,
+        elevation: 10,
+        marginBottom:15
+    },
+       
+    Container_tipos:{
+        flex:1,
+        alignItems:'center',
+        width: '100%',
+    }
   });
