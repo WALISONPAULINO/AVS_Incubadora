@@ -15,9 +15,9 @@ export function Index ({navigation}){
         firebase.auth().signInWithEmailAndPassword(email, senha)
         .then((r)=>{
             // Caso o login seja feito com sucesso
-            navigation.navigate('Home')
             setEmail('')
             setSenha('')
+            navigation.navigate('Home')
         })
         .catch((error)=>{
             // Caso aconteça algum erro

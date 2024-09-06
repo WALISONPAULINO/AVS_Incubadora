@@ -20,7 +20,6 @@ export default styles = StyleSheet.create({
       alignItems:'center',
       justifyContent:'center',
       width: '100%',
-      backgroundColor:'red'
     },
 
     Input_email:{
