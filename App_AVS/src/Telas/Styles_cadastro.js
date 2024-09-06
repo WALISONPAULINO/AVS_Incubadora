@@ -36,5 +36,15 @@ export default style = StyleSheet.create({
         flex:1,
         alignItems:'center',
         width: '100%',
+    },
+
+    titulo_ciclo:{
+        alignItems:'center',
+        marginBottom: 15,
+      
+    },
+
+    Texto_ciclo:{
+          fontSize:16
     }
   });
