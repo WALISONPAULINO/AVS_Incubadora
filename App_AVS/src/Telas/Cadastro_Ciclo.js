@@ -1,10 +1,10 @@
-import {Text, View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, ScrollView, Alert} from 'react-native'
+import { Text, View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native'
 import { Picker } from '@react-native-picker/picker';
 import React, { useState } from 'react';
 import styles from './Styles_Index'
 import style from './Styles_cadastro'
 
-export function Cadastro_Ciclo ({navigation}){
+export default ({navigation}) => {
     const [selectedAve, setSelectedAve] = useState("galinha");
     return(    
         <KeyboardAvoidingView style={styles.background}>

@@ -1,28 +1,19 @@
 import {Text, View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, StatusBar} from 'react-native'
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {Ionicons} from '@expo/vector-icons';
-
 import styles from './Styles_Index'
-import firebase from '../firebaseConnection';
+import firebase from '../services/firebaseConnection';
+import { AuthContext } from "../context/auth"
 
-export function Index ({navigation}){
+// PÁGINA DE LOGIN
+export default ({navigation}) => {
+    const { login } = useContext(AuthContext)
     const [email, setEmail] = useState('')
     const [senha, setSenha] = useState('')
 
     // Ao clicar no botão "Entrar" essa função é chamada
-    function login(){
-        // Tentativa de login no firebase com email e senha digitado nos campos
-        firebase.auth().signInWithEmailAndPassword(email, senha)
-        .then((r)=>{
-            // Caso o login seja feito com sucesso
-            setEmail('')
-            setSenha('')
-            navigation.navigate('Home')
-        })
-        .catch((error)=>{
-            // Caso aconteça algum erro
-            alert(`Erro ao tentar login: ${error}`)
-        })
+    function handleLogin(){
+        login(email, senha)
     }
 
     return(    
@@ -55,14 +46,12 @@ export function Index ({navigation}){
                 </View>
 
                 {/* Botão de login: */}
-                <TouchableOpacity style={styles.Botao_entrar} title='página login' onPress={login}>
+                <TouchableOpacity style={styles.Botao_entrar} title='página login' onPress={handleLogin}>
                     <Text style={styles.Texto_entrar}>Entrar</Text>
                 </TouchableOpacity>
 
                 <View>
-                    <Text onPress={() => {
-                        navigation.navigate('Cadastro')
-                    }} style={styles.esqueci_Senha}>Não tem uma conta? Registre-se</Text>
+                    <Text onPress={() => navigation.navigate('cadastro') } style={styles.esqueci_Senha}>Não tem uma conta? Registre-se</Text>
                 </View>
 
             </View>

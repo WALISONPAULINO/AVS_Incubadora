@@ -1,14 +1,26 @@
-import React from "react";
-import {Text, View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, StatusBar, Dimensions} from 'react-native'
+import React, { useState, useContext } from "react";
+import {Text, View, KeyboardAvoidingView, StatusBar } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
 import styles from './Styles_Index'
 import HomeStyles from './Styles.home'
+import firebase from '../services/firebaseConnection'
+import { AuthContext } from '../context/auth'
 
-export function Home ({navigation}){
+export default ({navigation}) => {
+    const { user } = useContext(AuthContext)
+    async function consultaCiclo(){
+        await firebase.database().ref('ciclos').child(user.uid).get()
+    }
+    const [ciclo, setCiclo] = useState(false)
+
     return (
         <KeyboardAvoidingView style={styles.background}>
             <StatusBar backgroundColor={'#13386E'}/>
+            {/* Dashboard */}
+            {
+             !ciclo ? <Text>Nenhum ciclo cadastrado</Text> :
+            (
+            <>
             <View style={HomeStyles.View_info}>
                 <View style={HomeStyles.container_titulo}>
                     <Text style={HomeStyles.Titulo}>Ciclo</Text>
@@ -33,6 +45,7 @@ export function Home ({navigation}){
                 </View>
             </View>
 
+            {/* Dados IoT */}
             <View style={HomeStyles.container_sensor}>
                 {/* Temperatura */}
                 <View style={HomeStyles.Campo_sensor}>
@@ -89,6 +102,8 @@ export function Home ({navigation}){
                 </View>
 
             </View>
+            </>
+            )}
         </KeyboardAvoidingView>
     );
 }

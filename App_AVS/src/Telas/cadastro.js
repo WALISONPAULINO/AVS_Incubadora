@@ -1,41 +1,19 @@
-import {
-  Text,
-  View,
-  KeyboardAvoidingView,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  StatusBar,
-  ScrollView,
-} from "react-native";
-import React, { useState } from "react";
+import { Text, View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, StatusBar, ScrollView, } from "react-native";
+import React, { useState, useContext } from "react";
 import styles from "./Styles_Index";
 import style from "./Styles_cadastro";
-import firebase from "../firebaseConnection";
+import { AuthContext } from "../context/auth";
 
-export function Cadastro({ navigation }) {
+// PÁGINA DE CADASTRO
+export default ({ navigation }) => {
+  const { cadastro } = useContext(AuthContext)
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
 
-  function cadastrar() {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, senha)
-      .then((r) => {
-        firebase.database().ref("usuarios").child(r.user.uid).set({
-          nome: nome,
-        });
-        alert("Usuário criado com sucesso!");
-        setNome("");
-        setEmail("");
-        setSenha("");
-        navigation.navigate("Index");
-      })
-      .catch((error) => {
-        alert(`Houve um erro no seu cadastro ${error}`);
-      });
+  function handleCadastro(){
+    cadastro(nome, email, senha)
   }
 
   return (
@@ -95,16 +73,13 @@ export function Cadastro({ navigation }) {
           <TouchableOpacity
             style={styles.Botao_entrar}
             title="página sobre"
-            onPress={cadastrar}
+            onPress={handleCadastro}
           >
             <Text style={styles.Texto_entrar}>Cadastrar</Text>
           </TouchableOpacity>
 
           <View>
-            <Text
-              onPress={() => navigation.navigate("Index")}
-              style={styles.esqueci_Senha}
-            >
+            <Text onPress={() => navigation.navigate("login")} style={styles.esqueci_Senha}>
               Já tem uma conta? Faça login
             </Text>
           </View>
