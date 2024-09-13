@@ -1,26 +1,46 @@
-import React, { useState, useContext } from "react";
-import {Text, View, KeyboardAvoidingView, StatusBar } from 'react-native'
+import React, { useState, useContext, useEffect } from "react";
+import {Text, View, KeyboardAvoidingView, StatusBar, Button } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './Styles_Index'
 import HomeStyles from './Styles.home'
 import firebase from '../services/firebaseConnection'
 import { AuthContext } from '../context/auth'
 
+
+// PÁGINA COM DASHBOARD
+
 export default ({navigation}) => {
-    const { user } = useContext(AuthContext)
-    async function consultaCiclo(){
-        await firebase.database().ref('ciclos').child(user.uid).get()
-    }
     const [ciclo, setCiclo] = useState(false)
+    const { user } = useContext(AuthContext)
+
+    useEffect(() => {
+
+        async function consultaCiclo(){
+            firebase.database().ref('ciclos').orderByChild('usuario').equalTo(user.uid).on('value', snapshot => {
+                if(snapshot.exists()){
+                    snapshot.forEach((value)=>{
+                        const valor = value.val()
+                        setCiclo(valor)
+                        console.log(valor)
+                    })
+
+                }else{
+                    setCiclo(false)
+                }
+            }, (error) => {
+                console.error('Erro ao buscar ciclos:', error);
+            })
+        }
+        // Fim da função consultaCiclo
+        consultaCiclo()
+    },[])
+
 
     return (
         <KeyboardAvoidingView style={styles.background}>
             <StatusBar backgroundColor={'#13386E'}/>
-            {/* Dashboard */}
-            {
-             !ciclo ? <Text>Nenhum ciclo cadastrado</Text> :
-            (
-            <>
+            {/* Dashboard */}    
+
             <View style={HomeStyles.View_info}>
                 <View style={HomeStyles.container_titulo}>
                     <Text style={HomeStyles.Titulo}>Ciclo</Text>
@@ -61,7 +81,7 @@ export default ({navigation}) => {
                     </View>
 
                     <View style={HomeStyles.Container_dados}>
-                        <Text style={HomeStyles.Titulo_dados}>38°C</Text>
+                        <Text style={HomeStyles.Titulo_dados}>{temperatura}°C</Text>
                     </View>
                 </View>
 
@@ -79,7 +99,7 @@ export default ({navigation}) => {
                     </View>
 
                     <View style={HomeStyles.Container_dados}>
-                        <Text style={HomeStyles.Titulo_dados}>60%</Text>
+                        <Text style={HomeStyles.Titulo_dados}>{umidade}%</Text>
                     </View>
                 </View>
 
@@ -100,10 +120,8 @@ export default ({navigation}) => {
                         <Text style={HomeStyles.Titulo_dados_rotacao}>Próxima a 2h</Text>
                     </View>
                 </View>
-
             </View>
-            </>
-            )}
+            <Button title="Criar ciclo" onPress={()=>navigation.navigate('cadastro_ciclo')}/>
         </KeyboardAvoidingView>
     );
 }

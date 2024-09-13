@@ -1,11 +1,36 @@
 import { Text, View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native'
-import { Picker } from '@react-native-picker/picker';
-import React, { useState } from 'react';
+import { Picker } from '@react-native-picker/picker'
+import React, { useState, useContext, useEffect } from 'react'
 import styles from './Styles_Index'
 import style from './Styles_cadastro'
+import firebase from '../services/firebaseConnection'
+import { AuthContext } from '../context/auth'
 
 export default ({navigation}) => {
+    const horaRotacao = new Date({})
+    const { user } = useContext(AuthContext)
     const [selectedAve, setSelectedAve] = useState("galinha");
+    const [qtdOvos, setqtdOvos] = useState(0)
+
+    async function criaCiclo(){
+        try{
+            const uid = firebase.database().ref('ciclos').push().key
+            await firebase.database().ref('ciclos').child(uid).set({
+                especie: selectedAve,
+                qtdOvos: Number(qtdOvos),
+                rotacao: 'Obj Date',
+                dtInicio: 'Obj Date',
+                dtFim: 'Obj Date',
+                incubadora: 'UID incubadora',
+                usuario: user.uid
+            })
+            navigation.navigate('lista_ciclo')
+        }
+        catch(e){
+            alert(e)
+        }
+        useEffect 
+    }
     return(    
         <KeyboardAvoidingView style={styles.background}>
              <ScrollView style={{ width: '100%',}}>
@@ -35,8 +60,11 @@ export default ({navigation}) => {
                     <View style={styles.Text_campo}> 
                             <Text style={styles.Texto}>Quantidade de ovos</Text>
                     </View>
-                    <TextInput style={styles.Input_email}
-                            placeholder='Digite a quantidade de ovos'
+                    <TextInput 
+                        style={styles.Input_email}
+                        value={qtdOvos}
+                        placeholder='Digite a quantidade de ovos'
+                        onChangeText={ (texto) => setqtdOvos(texto) }
                     />
 
                     <View style={styles.Text_campo}> 
@@ -75,12 +103,10 @@ export default ({navigation}) => {
                     </View>
 
                     {/* botão Entrar */}
-                    <TouchableOpacity style={styles.Botao_entrar}
-                        title='página sobre'
-                        onPress={()=> 
-                            navigation.navigate('Sobre')
-                        }>
-                        <Text style={styles.Texto_entrar}>Cadastrar Ciclo</Text>
+                    <TouchableOpacity 
+                        style={styles.Botao_entrar}
+                        onPress={criaCiclo}>
+                        <Text style={styles.Texto_entrar}>Criar ciclo</Text>
                     </TouchableOpacity>
                 </View>
              </ScrollView>
