@@ -1,4 +1,5 @@
 import { Text, View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native'
+import { useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker'
 import React, { useState, useContext, useEffect } from 'react'
 import styles from './Styles_Index'
@@ -11,6 +12,27 @@ export default ({navigation}) => {
     const { user } = useContext(AuthContext)
     const [selectedAve, setSelectedAve] = useState("galinha");
     const [qtdOvos, setqtdOvos] = useState(0)
+    const [incubadora, setIncubadora] = useState(null)
+    const route = useRoute();
+
+    useEffect(() => {
+        // Consultando incubadora para vincular ao ciclo quando ele for salvo
+        // NÃO POSSO PERMITIR QUE UMA INCUBADORA TENHA MAIS DE UM CICLO
+        function consultaIncubadora(){
+            firebase.database().ref('usuarios').child(user.uid).child('incubadora').once('value', snapshot => {
+                if(snapshot.exists()){
+                    // console.log(snapshot.val())
+                    setIncubadora(snapshot.val())
+                } else {
+                    console.log("Usuário não possui incubadora.");
+                }
+            }, error => {
+                console.error("Erro ao acessar incubadora:", error);
+            });
+        }
+        consultaIncubadora()
+    }, []);
+
 
     async function criaCiclo(){
         try{
@@ -21,7 +43,7 @@ export default ({navigation}) => {
                 rotacao: 'Obj Date',
                 dtInicio: 'Obj Date',
                 dtFim: 'Obj Date',
-                incubadora: 'UID incubadora',
+                incubadora: incubadora,
                 usuario: user.uid
             })
             navigation.navigate('lista_ciclo')
@@ -29,7 +51,7 @@ export default ({navigation}) => {
         catch(e){
             alert(e)
         }
-        useEffect 
+
     }
     return(    
         <KeyboardAvoidingView style={styles.background}>
@@ -102,7 +124,6 @@ export default ({navigation}) => {
                         <Text style={styles.Texto}>A cada 4h</Text>
                     </View>
 
-                    {/* botão Entrar */}
                     <TouchableOpacity 
                         style={styles.Botao_entrar}
                         onPress={criaCiclo}>

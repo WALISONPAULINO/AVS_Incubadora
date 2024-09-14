@@ -6,6 +6,7 @@ export const AuthContext = createContext({})
 export default ({ children }) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [incubadora, setIncubadora] = useState(null)
 
     useEffect(()=>{
         async function loadStorage() {

@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
-import {Text, View, KeyboardAvoidingView, StatusBar, Button } from 'react-native'
+import {Text, View, KeyboardAvoidingView, StatusBar, StyleSheet, ActivityIndicator } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useRoute } from '@react-navigation/native';
 import styles from './Styles_Index'
 import HomeStyles from './Styles.home'
 import firebase from '../services/firebaseConnection'
@@ -10,33 +11,53 @@ import { AuthContext } from '../context/auth'
 // PÁGINA COM DASHBOARD
 
 export default ({navigation}) => {
+    const [loading, setLoading] = useState(true)
     const [ciclo, setCiclo] = useState(false)
+    const [incubadora, setIncubadora] = useState(null)
+    const [uidIncubadora, setuidIncubadora] = useState('') // Pego UID da incubadora presente em ciclo e consulto a tabela incubadoras
     const { user } = useContext(AuthContext)
+    const route = useRoute();
 
     useEffect(() => {
+        if (route.params && route.params.item) {
+            // Recebe ID da incubadora a partir dos parâmetros enviados da lista ciclo pelo navigation
+            setuidIncubadora(route.params.ciclo.incubadora)
+            // Recebe informações do ciclo passados por parâmetros
+            setCiclo(route.params.ciclo)
+            setLoading(false)
+        }
+    }, [route.params]);
 
-        async function consultaCiclo(){
-            firebase.database().ref('ciclos').orderByChild('usuario').equalTo(user.uid).on('value', snapshot => {
+
+    
+    
+    
+    // CONSULTAR INCUBADORA
+    useEffect(() => {
+        if(uidIncubadora){
+        function consultaIncubadora(){
+            firebase.database().ref('incubadoras').child(uidIncubadora).on('value', snapshot => {
+                setIncubadora(null)
                 if(snapshot.exists()){
-                    snapshot.forEach((value)=>{
-                        const valor = value.val()
-                        setCiclo(valor)
-                        console.log(valor)
-                    })
-
-                }else{
-                    setCiclo(false)
+                    setIncubadora(snapshot.val())
                 }
-            }, (error) => {
-                console.error('Erro ao buscar ciclos:', error);
+                setLoading(false)
             })
         }
-        // Fim da função consultaCiclo
-        consultaCiclo()
-    },[])
-
+        consultaIncubadora()
+      }
+    }, [uidIncubadora])
+    
+    if(loading){
+        return(
+            <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
+                <ActivityIndicator size='large' color="#131313" />
+            </View>
+        )
+    }
 
     return (
+
         <KeyboardAvoidingView style={styles.background}>
             <StatusBar backgroundColor={'#13386E'}/>
             {/* Dashboard */}    
@@ -48,7 +69,7 @@ export default ({navigation}) => {
 
                 <View style={HomeStyles.Infos}>
                     <View style={HomeStyles.container_ciclos}>
-                        <Text style={HomeStyles.Campos}>Espécie: Galinha preta</Text>
+                        <Text style={HomeStyles.Campos}>Espécie: {ciclo ? ciclo.especie : 'Carregando'}</Text>
                     </View>
 
                     <View style={HomeStyles.container_ciclos}>
@@ -56,7 +77,7 @@ export default ({navigation}) => {
                     </View>
 
                     <View style={HomeStyles.container_ciclos}>
-                        <Text style={HomeStyles.Campos}>Quantidade de ovos: 15</Text>
+                        <Text style={HomeStyles.Campos}>Quantidade de ovos: {ciclo ? ciclo.qtdOvos : 'Carregando'}</Text>
                     </View>
 
                     <View style={HomeStyles.container_ciclos}>
@@ -77,11 +98,26 @@ export default ({navigation}) => {
 
                     <View style={HomeStyles.Container_tipo}>
                         <Text style={HomeStyles.Titulo_sensor}>Temperatura</Text>
-                        <Text style={HomeStyles.Subtitulo_sensor}>Ideal</Text>
+                        {/*  */}
+                        <Text style={
+                            { fontSize:18, color: incubadora && incubadora.temperatura >= 37.4 && incubadora.temperatura <= 37.8 
+                                ? '#15A64F'  // Verde para "Ideal"
+                                : incubadora && incubadora.temperatura > 37.8 
+                                    ? 'red'    // Vermelho para "Acima"
+                                    : 'blue'   // Azul para "Abaixo" 
+                            }}>
+                        {
+                        incubadora 
+                        ? (
+                            incubadora.temperatura >= 37.4 & incubadora.temperatura <= 37.8 
+                            ? "Ideal" 
+                            : incubadora.temperatura > 37.4 ? "Acima" : "Abaixo"
+                        ) : 'Carregando'
+                        }</Text>
                     </View>
 
                     <View style={HomeStyles.Container_dados}>
-                        <Text style={HomeStyles.Titulo_dados}>{temperatura}°C</Text>
+                        <Text style={HomeStyles.Titulo_dados}>{incubadora ? incubadora.temperatura : 0}°C</Text>
                     </View>
                 </View>
 
@@ -95,11 +131,25 @@ export default ({navigation}) => {
 
                     <View style={HomeStyles.Container_tipo}>
                         <Text style={HomeStyles.Titulo_sensor}>Umidade</Text>
-                        <Text style={HomeStyles.Subtitulo_sensor}>Ideal</Text>
+                        <Text style={
+                            { fontSize:18, color: incubadora && incubadora.umidade >= 55 && incubadora.umidade <= 65 
+                                ? '#15A64F'  // Verde para "Ideal"
+                                : incubadora && incubadora.umidade > 55 
+                                    ? 'red'    // Vermelho para "Acima"
+                                    : 'blue'   // Azul para "Abaixo" 
+                            }}>
+                        {
+                        incubadora 
+                        ? (
+                            incubadora.umidade >= 55 & incubadora.umidade <= 65
+                            ? "Ideal" 
+                            : incubadora.umidade > 55 ? "Acima" : "Abaixo"
+                        ) : 'Carregando'
+                        }</Text>
                     </View>
 
                     <View style={HomeStyles.Container_dados}>
-                        <Text style={HomeStyles.Titulo_dados}>{umidade}%</Text>
+                        <Text style={HomeStyles.Titulo_dados}>{incubadora ? incubadora.umidade : 0}%</Text>
                     </View>
                 </View>
 
@@ -121,7 +171,14 @@ export default ({navigation}) => {
                     </View>
                 </View>
             </View>
-            <Button title="Criar ciclo" onPress={()=>navigation.navigate('cadastro_ciclo')}/>
         </KeyboardAvoidingView>
     );
 }
+
+
+const style = StyleSheet.create({
+    sensorState: {
+        fontSize:18,
+        color: '#15A64F'
+    }
+})

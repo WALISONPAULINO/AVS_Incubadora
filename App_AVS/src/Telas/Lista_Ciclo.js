@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { View, Text, FlatList, StatusBar } from "react-native"
+import { View, Text, FlatList, StatusBar, SafeAreaView } from "react-native"
 import firebase from "../services/firebaseConnection"
 import { AuthContext } from "../context/auth"
 import { Button } from "react-native";
@@ -8,6 +8,7 @@ import { Button } from "react-native";
 // PÁGINA INICIAL APÓS LOGIN
 
 export default ({navigation}) => {
+    const [loading, setLoading] = useState(true)
     const { user } = useContext(AuthContext)
     const [listaCiclos, setListaCiclos] = useState([])
     const [ciclo, setCiclo] = useState(false)
@@ -25,7 +26,8 @@ export default ({navigation}) => {
                         const valor = value.val()
 
                         lista.push({
-                            key: value.key,
+                            ciclo: valor,
+                            key: value.key
                         })
 
                     })
@@ -54,7 +56,7 @@ export default ({navigation}) => {
     }
 
     return(
-        <View style={{backgroundColor: '#fff'}}>
+        <SafeAreaView style={{backgroundColor: '#fff'}}>
             <StatusBar />
             <Text style={{fontSize: 20}}>Olá {user.nome}</Text>
             {/* Renderizando lista com os ciclos do usuário */}
@@ -69,16 +71,19 @@ export default ({navigation}) => {
                             // View container com todos os itens da lista
                             <View>
                                 <View style={{flexDirection: 'row', gap: 10}}>
-                                    <Text>ID: {item.key}</Text>
-                                    <Button title="Excluir" onPress={() => excluiCiclo(item.key) } />
+                                    <Text onPress={() => {
+                                        navigation.navigate('dashboard', { item: item.key, ciclo: item.ciclo })
+                                        }
+                                    }>ID: {item.key}</Text>
+                                    <Text onPress={() => excluiCiclo(item.key)}>Excluir</Text>
                                 </View>
                             </View>
                         )}
                         /> 
                     </> 
                 )
-                : <Text>Você não possui nenhum ciclo em andamento</Text>}         
+                : <Text>Você não possui nenhum ciclo em andamento</Text>} 
                 <Button title="Criar ciclo" onPress={() => navigation.navigate('cadastro_ciclo')} />
-        </View>
+        </SafeAreaView>
     )
 }
