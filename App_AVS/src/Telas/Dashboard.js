@@ -6,6 +6,7 @@ import styles from './Styles_Index'
 import HomeStyles from './Styles.home'
 import firebase from '../services/firebaseConnection'
 import { AuthContext } from '../context/auth'
+import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 
 // PÁGINA COM DASHBOARD
@@ -64,24 +65,28 @@ export default ({navigation}) => {
 
             <View style={HomeStyles.View_info}>
                 <View style={HomeStyles.container_titulo}>
+                    <MaterialCommunityIcons name="layers-triple" size={25} color="#fff" style={{marginTop:10, marginRight:5}} />
                     <Text style={HomeStyles.Titulo}>Ciclo</Text>
                 </View>
 
                 <View style={HomeStyles.Infos}>
                     <View style={HomeStyles.container_ciclos}>
-                        <Text style={HomeStyles.Campos}>Espécie: {ciclo ? ciclo.especie : 'Carregando'}</Text>
+                        <MaterialCommunityIcons name="feather" size={25} color="#fff" />
+                        <Text style={HomeStyles.Campos}> Espécie: {ciclo ? ciclo.especie : 'Carregando'}</Text>
                     </View>
 
                     <View style={HomeStyles.container_ciclos}>
+                        <MaterialCommunityIcons name="calendar-month" size={25} color="#fff" />
                         <Text style={HomeStyles.Campos}>Data inicial:01/08/2003</Text>
                     </View>
 
                     <View style={HomeStyles.container_ciclos}>
+                        <MaterialCommunityIcons name="egg" size={25} color="#fff" />
                         <Text style={HomeStyles.Campos}>Quantidade de ovos: {ciclo ? ciclo.qtdOvos : 'Carregando'}</Text>
                     </View>
 
                     <View style={HomeStyles.container_ciclos}>
-                        <Text style={HomeStyles.Campos}>Faltam 10 dias para a eclosão dos ovos</Text>
+                        <Text style={HomeStyles.campo_dias}>Faltam 10 dias para a eclosão dos ovos</Text>
                     </View>
                 </View>
             </View>
@@ -125,7 +130,7 @@ export default ({navigation}) => {
                 <View style={HomeStyles.Campo_sensor}>
                     <View style={HomeStyles.container_icon}>
                         <View style={HomeStyles.campo_icon}>
-                             <Icon name="thermostat" size={30} color="#FFF" />
+                            <MaterialCommunityIcons name="water" size={25} color="#fff" />
                         </View>
                     </View>
 
@@ -157,7 +162,7 @@ export default ({navigation}) => {
                 <View style={HomeStyles.Campo_sensor}>
                     <View style={HomeStyles.container_icon}>
                         <View style={HomeStyles.campo_icon}>
-                             <Icon name="thermostat" size={30} color="#FFF" />
+                            <MaterialCommunityIcons name="atom-variant" size={25} color="#fff" />
                         </View>
                     </View>
 
@@ -169,6 +174,7 @@ export default ({navigation}) => {
                     <View style={HomeStyles.Container_dados}>
                         <Text style={HomeStyles.Titulo_dados_rotacao}>Próxima a 2h</Text>
                     </View>
+
                 </View>
             </View>
         </KeyboardAvoidingView>

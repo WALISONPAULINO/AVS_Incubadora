@@ -78,6 +78,7 @@ export default ({navigation}) => {
 
                 <View style={style.container_picker}>
                     <Text style={style.label}>Espécie</Text>
+                    
                     <Picker
                         selectedValue={selectedAve}
                         style={style.picker}
@@ -103,9 +104,9 @@ export default ({navigation}) => {
                     <View style={styles.Text_campo}> 
                         <Text style={styles.Texto}>Data Inicial</Text>
                     </View>
-                    <TextInput style={styles.Input_email}
-                        // placeholder='Digite seu e-mail'
-                    />
+                    <View style={styles.Input_False}> 
+                        <Text>20/08/22</Text>
+                    </View>
 
                     <View style={styles.Text_campo}> 
                         <Text style={styles.Texto}>Data prevista de término</Text>

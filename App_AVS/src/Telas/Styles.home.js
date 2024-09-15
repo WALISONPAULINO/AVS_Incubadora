@@ -5,10 +5,10 @@ export default HomeStyles = StyleSheet.create({
         backgroundColor:'#13386E',
         width:'90%',
         flex:2,
-        marginTop: 40,
+        marginTop: 80,
         marginBottom: 50,
         alignItems:'center',
-        borderRadius:4
+        borderRadius:8,
     },
 
     Infos:{
@@ -27,7 +27,8 @@ export default HomeStyles = StyleSheet.create({
     }, 
 
     container_titulo:{
-        width: '90%'
+        width: '90%',
+        flexDirection:'row'
     },
 
     Titulo:{
@@ -38,12 +39,14 @@ export default HomeStyles = StyleSheet.create({
 
     container_ciclos:{
         marginTop: 10,
-        width:'90%'
+        width:'90%',
+        flexDirection:'row'
     },
 
     Campos:{
         fontSize: 20,
-        color:'#FFF'
+        color:'#FFF',
+        marginLeft:10
     },
 
     Campo_sensor:{
@@ -96,6 +99,37 @@ export default HomeStyles = StyleSheet.create({
 
     Titulo_dados:{
         fontSize:32
+    },
+
+    campo_dias:{
+        fontSize:16,
+        color: 'white',
+        marginTop:10
+    },
+
+    Container_Nome:{
+        width:'90%'
+    },
+
+    Name:{
+        backgroundColor:'#E0E0E0',
+        height:60,
+        justifyContent:'center',
+        borderRadius: 8,
+        marginTop:8,
+        marginBottom:20,
+        elevation:20
+    },
+
+    button_sair:{
+        backgroundColor:'#BB4B4B',
+        width:'90%',
+        height: 55,
+        borderRadius:8,
+        marginTop:50,
+        elevation:20,
+        alignItems:'center',
+        justifyContent:'center'
     }
   });
   

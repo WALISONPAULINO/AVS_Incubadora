@@ -3,7 +3,9 @@ import { View, Text, FlatList, StatusBar, SafeAreaView, ActivityIndicator } from
 import firebase from "../services/firebaseConnection"
 import { AuthContext } from "../context/auth"
 import { Button } from "react-native";
-
+import style from './Styles_cadastro'
+import { TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 // PÁGINA INICIAL APÓS LOGIN
 
@@ -67,34 +69,62 @@ export default ({navigation}) => {
     }
 
     return(
-        <View style={{backgroundColor: '#fff', alignItems: 'center', flex:1}}>
+        <View style={{backgroundColor: '#fff', alignItems: 'center', flex:1, justifyContent:'center'}}>
             <StatusBar />
-            <Text style={{fontSize: 20}}>Olá {user.nome}</Text>
-            {/* Renderizando lista com os ciclos do usuário */}
-            {ciclo ?
+
+            <View style={style.container_nome}>
+                <Text style={{fontSize: 20}}>Olá, {user.nome}</Text>
+            </View>
+           
+
+           <View style={style.container_ciclo_D}>
+              {/* Renderizando lista com os ciclos do usuário */}
+              {ciclo ?
             (
                 <>
-                    <Text>Ciclos em andamento:</Text>
+                    <View style={style.ciclo_andamento}>
+                        <Text style={{fontSize:16}}>Ciclos em andamento:</Text>
+                    </View>
                     <FlatList 
                         data={listaCiclos} 
                         keyExtractor={item => item.key} 
                         renderItem={ ({item}) => (
                             // View container com todos os itens da lista
-                            <View>
-                                <View style={{flexDirection: 'row', gap: 10}}>
-                                    <Text onPress={() => {
-                                        navigation.navigate('dashboard', { item: item.key, ciclo: item.ciclo })
-                                        }
-                                    }>ID: {item.key}</Text>
-                                    <Text onPress={() => excluiCiclo(item.key)}>Excluir</Text>
+                            <View style={style.container_andamento}>
+                                <View style={style.Ciclos}>
+                                    <View style={style.idCiclos}>
+                                        <MaterialCommunityIcons name="layers-triple" size={20} color="black" style={{marginRight:10}}/>
+                                        <Text style={style.nomeCiclo} onPress={() => {
+                                            navigation.navigate('dashboard', { item: item.key, ciclo: item.ciclo })
+                                            }
+                                        }>Ciclo: {item.key}</Text>
+                                    </View>
+                                    
+                                    <View style={style.excluir}>
+                                        <Text style={style.Nvisualizar} onPress={() => excluiCiclo(item.key)}>Visualizar</Text>
+                                    </View>
                                 </View>
                             </View>
+                            
                         )}
                         /> 
                     </> 
                 )
-                : <Text>Você não possui nenhum ciclo em andamento</Text>} 
-                <Button title="Criar ciclo" onPress={() => navigation.navigate('cadastro_ciclo')} />
+                
+                : <Text style={style.sem_ciclo}>Você não possui nenhum ciclo em andamento</Text>} 
+                {/* <Button title="Criar ciclo" onPress={() => navigation.navigate('cadastro_ciclo')} /> */}
+           </View>
+
+           <View style={style.container_ciclo}>
+                <TouchableOpacity
+                    style={style.botao_ciclo}
+                    title="Criar ciclo" 
+                    onPress={() => navigation.navigate('cadastro_ciclo')}
+                >
+                    <Text style={style.Mais}>+</Text>
+                </TouchableOpacity>
+            </View>
+          
         </View>
     )
 }
