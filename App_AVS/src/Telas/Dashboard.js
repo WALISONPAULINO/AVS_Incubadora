@@ -100,19 +100,19 @@ export default ({navigation}) => {
                         <Text style={HomeStyles.Titulo_sensor}>Temperatura</Text>
                         {/*  */}
                         <Text style={
-                            { fontSize:18, color: incubadora && incubadora.temperatura >= 37.4 && incubadora.temperatura <= 37.8 
+                            { fontSize:18, color: incubadora && incubadora.temperatura >= 36 && incubadora.temperatura <= 37 
                                 ? '#15A64F'  // Verde para "Ideal"
-                                : incubadora && incubadora.temperatura > 37.8 
+                                : incubadora && incubadora.temperatura > 37
                                     ? 'red'    // Vermelho para "Acima"
                                     : 'blue'   // Azul para "Abaixo" 
                             }}>
                         {
                         incubadora 
                         ? (
-                            incubadora.temperatura >= 37.4 & incubadora.temperatura <= 37.8 
+                            incubadora.temperatura >= 36 & incubadora.temperatura <= 37
                             ? "Ideal" 
-                            : incubadora.temperatura > 37.4 ? "Acima" : "Abaixo"
-                        ) : 'Carregando'
+                            : incubadora.temperatura > 36 ? "Acima" : "Abaixo"
+                        ) : ''
                         }</Text>
                     </View>
 
@@ -144,7 +144,7 @@ export default ({navigation}) => {
                             incubadora.umidade >= 55 & incubadora.umidade <= 65
                             ? "Ideal" 
                             : incubadora.umidade > 55 ? "Acima" : "Abaixo"
-                        ) : 'Carregando'
+                        ) : ''
                         }</Text>
                     </View>
 

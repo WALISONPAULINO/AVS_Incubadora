@@ -6,7 +6,6 @@ export const AuthContext = createContext({})
 export default ({ children }) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
-    const [incubadora, setIncubadora] = useState(null)
 
     useEffect(()=>{
         async function loadStorage() {
@@ -23,7 +22,19 @@ export default ({ children }) => {
 
     // Função para Login
     async function login(email, senha){
-        console.log('Logando')
+        try{
+            let usuario = await firebase.auth().signInWithEmailAndPassword(email, senha)
+            let uid = usuario.user.uid
+            firebase.database().ref('usuarios').child(uid).once('value', snapshot => {
+                if(snapshot.exists()){
+                    let data = { uid: uid, nome: snapshot.val().nome, email: usuario.user.email }
+                    storageUser(data)
+                    setUser(data)
+                }
+            })
+        }catch(e){
+            alert(e)
+        }
     }
 
     // Função para Cadastro
@@ -35,12 +46,13 @@ export default ({ children }) => {
                 nome: nome,
             })
             let data = { uid: uid, nome: nome, email: usuario.user.email }
-            storageUser(data)
+            // storageUser(data)
             setUser(data)
         }catch(e){
             alert(e)
         }
     }
+    
 
 
     async function storageUser(data){

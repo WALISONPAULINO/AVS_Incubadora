@@ -9,7 +9,7 @@ export default () => {
     return(
         <AuthStack.Navigator initialRouteName="login">
             <AuthStack.Screen name="login" component={Login} options={{headerShown:false}} />
-            <AuthStack.Screen name="cadastro" component={Cadastro} options={{headerShown:false}} />
+            <AuthStack.Screen name="cadastro" component={Cadastro} options={{headerTitle: 'Cadastre-se', headerShadowVisible:false}} />
         </AuthStack.Navigator>
     )
 }
