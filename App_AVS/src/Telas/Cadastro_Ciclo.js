@@ -1,12 +1,10 @@
 import { Text, View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, ScrollView, StatusBar, ActivityIndicator, FlatList } from 'react-native'
-import { useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker'
 import React, { useState, useContext, useEffect } from 'react'
 import styles from './Styles_Index'
 import style from './Styles_cadastro'
 import firebase from '../services/firebaseConnection'
 import { AuthContext } from '../context/auth'
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 export default ({navigation}) => {
@@ -17,24 +15,32 @@ export default ({navigation}) => {
     const [incubadora, setIncubadora] = useState(null)
     const [loading, setLoading] = useState(true)
     const [listaIncubadoras, setListaIncubadoras] = useState([])
+    const [selectedIncubadora, setSelectedIncubadora] = useState('');
 
     useEffect(() => {
         function consultaIncubadoras() {
             firebase.database().ref(`usuarios/${user.uid}/incubadoras`).on('value', snapshot => {
-                if (snapshot.exists()) {
+                if(snapshot.exists()) {
                     let lista = [];
                     snapshot.forEach(value => {
-                        // console.log(value.val()[noIncubadora]);
-                        lista.push({
-                            ciclo: value.val().ciclo || null,
-                            key: value.val().uid
-                        });
+                        if(!value.val().ciclo){
+                            console.log('Passei aqui')
+                            lista.push({
+                                key: value.val().uid,
+                                nome: value.val().nome
+                            });
+                            console.log('Não tem ciclo')
+                        }
+                        else{
+                            setListaIncubadoras(false)
+                            console.log('Tem ciclo')
+                        }
                     });
                     setListaIncubadoras(lista);
                     setLoading(false);
                 } else {
+                    setListaIncubadoras([])
                     setLoading(false);
-                    setListaIncubadoras([]);
                 }
             });
         }
@@ -43,7 +49,10 @@ export default ({navigation}) => {
 
     async function criaCiclo(){
         // Fazer validação de campos
-
+        const regex = /[.#$\[\]]/g;
+        if(regex.test(selectedIncubadora)){
+            alert('Selecione uma incubadora para seu ciclo')
+        }
         // Testando se incubadora já possui um ciclo
         try{
             // Cria UID
@@ -55,13 +64,26 @@ export default ({navigation}) => {
                 rotacao: 'Obj Date',
                 dtInicio: 'Obj Date',
                 dtFim: 'Obj Date',
-                incubadora: incubadora,
+                incubadora: selectedIncubadora,
                 usuario: user.uid
             })
-            
+            console.log('Cheguei aqui 1')
+            console.log(selectedIncubadora)
             // Atribuindo o ciclo criado a incubadora escaneada
-            firebase.database().ref('incubadoras').child(incubadora).update({
+            firebase.database().ref('incubadoras').child(selectedIncubadora).update({
                 ciclo: uid
+            })
+
+            // Atualizando incubadora na tabela do usuário
+            console.log('Cheguei aqui 2')
+            firebase.database().ref(`usuarios/${user.uid}/incubadoras`).orderByChild('uid').equalTo(selectedIncubadora).once('value', snapshot => {
+                snapshot.forEach(value => {
+                    const incubadoraKey = value.key
+
+                    firebase.database().ref(`usuarios/${user.uid}/incubadoras/${incubadoraKey}`).update({
+                        ciclo: uid
+                    })
+                })
             })
 
             navigation.navigate('lista_ciclo')
@@ -147,30 +169,28 @@ export default ({navigation}) => {
                     </View>
 
                 {  
-                    incubadora /* Se nenhuma incubadora tiver sido escaneada mostra o botão */
+                    listaIncubadoras.length > 0 
+                    /* Se a lista de incubadoras não possui elementos significa que 
+                    nenhuma incubadora pode ser selecionada para o ciclo */
                     ?
-                    <View style={{
-                                backgroundColor:'#3CB371', 
-                                width:'90%', 
-                                height: 52, 
-                                alignItems: 'center', 
-                                justifyContent:'center', 
-                                borderRadius: 8, 
-                                marginTop: 25, 
-                                marginBottom: 4,
-                                flexDirection: 'row',
-                                gap: 5,
-                            }}>
-                        <Text style={styles.Texto_entrar}>Incubadora escaneada</Text>
-                        <MaterialCommunityIcons name="check-circle" size={25} color="#fff" />
-                    </View>
-                    : 
                     (<>
-                        <FlatList 
-                            
-                        />
+
                         <Text>É necessário selecionar uma incubadora para seu ciclo</Text>
+                        <View style={style.container_picker}>
+                            <Picker
+                                selectedValue={selectedIncubadora}
+                                style={style.picker}
+                                onValueChange={(itemValue) => setSelectedIncubadora(itemValue)} // Atualiza incubadora selecionada
+                            >
+                                {/* Mapeia a lista de incubadoras para o Picker */}
+                                <Picker.Item key={1} label='Selecione uma incubadora' value='#$[]]g;' />
+                                {listaIncubadoras.map((incubadora) => (
+                                    <Picker.Item key={incubadora.key} label={incubadora.nome} value={incubadora.key} />
+                                ))}
+                            </Picker>
+                        </View>
                     </>)
+                    : <Text>Você não possui nenhuma incubadora disponível. Escaneie uma incubadora na seção Incubadoras!</Text>
                 }
 
                     <TouchableOpacity 

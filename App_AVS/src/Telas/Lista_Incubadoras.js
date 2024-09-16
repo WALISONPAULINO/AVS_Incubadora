@@ -16,7 +16,7 @@ export default ({navigation}) => {
     const route = useRoute();
 
     useEffect(() => {
-        if(route.params.data){
+        if(route.params && route.params.data){
             setIncubadoraScan(route.params.data)
             console.log('Passei aqui')
             setModalVisible(true);
