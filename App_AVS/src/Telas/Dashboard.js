@@ -66,7 +66,7 @@ export default ({navigation}) => {
             <View style={HomeStyles.View_info}>
                 <View style={HomeStyles.container_titulo}>
                     <MaterialCommunityIcons name="layers-triple" size={25} color="#fff" style={{marginTop:10, marginRight:5}} />
-                    <Text style={HomeStyles.Titulo}>Ciclo</Text>
+                    <Text style={HomeStyles.Titulo}>Dashboard</Text>
                 </View>
 
                 <View style={HomeStyles.Infos}>

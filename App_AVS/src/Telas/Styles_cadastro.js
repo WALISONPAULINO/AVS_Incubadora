@@ -113,7 +113,7 @@ export default style = StyleSheet.create({
 
     idCiclos:{
         width:'50',
-        flexDirection:'row'
+        flexDirection:'row',
     },
 
     excluir:{

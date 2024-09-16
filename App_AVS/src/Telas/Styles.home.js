@@ -4,8 +4,8 @@ export default HomeStyles = StyleSheet.create({
     View_info:{
         backgroundColor:'#13386E',
         width:'90%',
-        flex:2,
-        marginTop: 80,
+        flex:3,
+        marginTop: 35,
         marginBottom: 50,
         alignItems:'center',
         borderRadius:8,

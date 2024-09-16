@@ -10,6 +10,7 @@ import Scanner from "../Telas/Scanner";
 import Cadastro_Ciclo from "../Telas/Cadastro_Ciclo";
 import 'react-native-gesture-handler';
 import Perfil from "../Telas/Perfil";
+import Lista_Incubadoras from "../Telas/Lista_Incubadoras";
 
 // Criação dos navegadores
 const Stack = createNativeStackNavigator();
@@ -22,18 +23,15 @@ function StackNavigator() {
       <Stack.Screen 
         name="lista_ciclo" 
         component={Lista_Ciclo}
-        options={{ headerShown: false }} 
+        options={{ headerTitle: 'Home', headerShadowVisible: false }}
       />
-      <Stack.Screen 
-        name="scanner" 
-        component={Scanner}
-        options={{ headerShown: false }} 
-      />
+
       <Stack.Screen 
         name="dashboard" 
         component={Dashboard}
-        options={{ headerShown: false }} 
+        options={{ headerTitle: 'Ciclo', headerShadowVisible: false }}
       />
+
       <Stack.Screen 
         name="cadastro_ciclo"
         component={Cadastro_Ciclo}
@@ -51,7 +49,24 @@ function Profile(){
       <Stack.Screen 
         name="perfil"
         component={Perfil}
-        options={{headerShown: false}}
+        options={{ headerTitle: 'Meu perfil', headerShadowVisible: false }}
+      />
+    </Stack.Navigator>
+  )
+}
+
+function Incubadoras(){
+  return(
+    <Stack.Navigator initialRouteName="lista_incubadoras">
+      <Stack.Screen 
+        name="lista_incubadoras" 
+        component={Lista_Incubadoras}
+        options={{ headerTitle: 'Lista de Incubadoras', headerShadowVisible: false }}
+      />
+      <Stack.Screen 
+        name="scanner" 
+        component={Scanner}
+        options={{ headerShown: false }} 
       />
     </Stack.Navigator>
   )
@@ -66,6 +81,13 @@ function TabNavigator() {
         component={StackNavigator}
         options={{ headerShown: false, tabBarIcon: ({color,size}) => <MaterialCommunityIcons name="egg" color={color} size={size} />, }} 
       />
+
+      <Tab.Screen 
+        name="Incubadoras"
+        component={Incubadoras}
+        options={{ headerShown: false, tabBarIcon: ({color,size}) => <MaterialCommunityIcons name="view-carousel-outline" color={color} size={size} />, }} 
+      />
+      
       <Tab.Screen 
         name="Perfil" 
         component={Profile}

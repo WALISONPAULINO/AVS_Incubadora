@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Text, View, StatusBar, Button, Alert, StyleSheet } from "react-native";
 import { Camera, useCameraPermissions, CameraView } from "expo-camera";
 import firebase from "../services/firebaseConnection"
+import { AuthContext } from "../context/auth";
 
 export default ({navigation}) => {
   const [permissao, setPermissao] = useCameraPermissions()
+  const [incubadora, setIncubadora] = useState(false)
   const [scanned, setScanned] = useState(false)
-  
+  const { user } = useContext(AuthContext)
+
   // Pedir permissão:
   useEffect(()=>{
     async function chamaTela(){
@@ -41,60 +44,57 @@ export default ({navigation}) => {
       navigation.goBack()
       return;
     }
-    firebase.database().ref('incubadoras').child(data).once('value', async (snapshot) => {
-        if(snapshot.exists()){
 
-          // Eu preciso saber se essa incubadora já está vinculada a um ciclo
-          if(snapshot.val().ciclo){
-            Alert.alert(
-              'Aviso!',
-              'Esta incubadora já possui um ciclo em andamento!',
-              [
-                {
-                  text: 'OK',
-                  style: 'destructive',
-                },
-              ],
-              {
-                cancelable: false,
-              },
-            );
-            navigation.goBack()
-            return;
-          }
-
-          alert('Incubadora escaneada')
-          navigation.navigate('cadastro_ciclo', {data: data})
-        }else{
-          Alert.alert(
-            'Incubadora não encontrada!',
-            'Este QR Code não pertence a nenhuma incubadora.',
-            [
-              {
-                text: 'OK',
-                style: 'destructive',
-              },
-            ],
+    firebase.database().ref(`usuarios/${user.uid}`).child('incubadoras').orderByChild(data).once('value', snapshot => {
+      if(snapshot.exists()){
+        Alert.alert(
+          'Aviso',
+          'Você já escaneou esta incubadora!',
+          [
             {
-              cancelable: false,
+              text: 'OK',
+              style: 'destructive',
             },
-          );
-          navigation.goBack()
-          return;
-        }
+          ],
+          {
+            cancelable: false,
+          },
+        );
+        navigation.goBack()
+      }else{
+        // Se não tem a incubadora escaneada então busca no banco a incubadora e escaneia caso ela exista
+        firebase.database().ref('incubadoras').child(data).once('value', async (snapshot) => {
+            if(snapshot.exists()){
+              // Atribuindo a incubadora escaneada ao usuário
+              const uidIncubadora = firebase.database().ref(`usuarios/${user.uid}/incubadoras`).push().key
+              firebase.database().ref(`usuarios/${user.uid}/incubadoras`).child(uidIncubadora).set({
+                  uid: data,
+              })
+
+              alert('Incubadora escaneada')
+              navigation.goBack()
+            }else{
+              Alert.alert(
+                'Incubadora não encontrada!',
+                'Este QR Code não pertence a nenhuma incubadora.',
+                [
+                  {
+                    text: 'OK',
+                    style: 'destructive',
+                  },
+                ],
+                {
+                  cancelable: false,
+                },
+              );
+              navigation.goBack()
+            }
+        })
+      }
     })
+
+    // Essa consulta busca a incubadora, faz verificações e vincula ou não a incubadora a um usuário.
     setScanned(true)
-    // Alert.alert(
-    //   `Código: ${type} escaneado`,
-    //   `Dados: ${data}`,
-    //   [
-    //     {
-    //       text: 'OK',
-    //       onPress: () => setScanned(false)
-    //     }
-    //   ], 
-    //   { cancelable: false }
-    // )
   }
 
 

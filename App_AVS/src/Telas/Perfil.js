@@ -6,7 +6,7 @@ import HomeStyles from './Styles.home'
 export default () => {
     const { user } = useContext(AuthContext)
     return(
-        <View style={{fontSize: 20, justifyContent: 'center', alignItems: 'center', flex: 1}}>
+        <View style={{fontSize: 20, justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: '#fff'}}>
             {/* Nessa página o usuário poderá alterar suas informações */}
             <View style={HomeStyles.Container_Nome}>
                 <Text style={{fontSize:18}}>Nome</Text>

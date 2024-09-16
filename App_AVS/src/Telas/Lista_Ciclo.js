@@ -70,8 +70,7 @@ export default ({navigation}) => {
 
     return(
         <View style={{backgroundColor: '#fff', alignItems: 'center', flex:1, justifyContent:'center'}}>
-            <StatusBar />
-
+            <StatusBar backgroundColor={'#13386E'}/>
             <View style={style.container_nome}>
                 <Text style={{fontSize: 20}}>Olá, {user.nome}</Text>
             </View>
@@ -88,7 +87,7 @@ export default ({navigation}) => {
                     <FlatList 
                         data={listaCiclos} 
                         keyExtractor={item => item.key} 
-                        renderItem={ ({item}) => (
+                        renderItem={ ({item, index}) => (
                             // View container com todos os itens da lista
                             <View style={style.container_andamento}>
                                 <View style={style.Ciclos}>
@@ -97,7 +96,7 @@ export default ({navigation}) => {
                                         <Text style={style.nomeCiclo} onPress={() => {
                                             navigation.navigate('dashboard', { item: item.key, ciclo: item.ciclo })
                                             }
-                                        }>Ciclo: {item.key}</Text>
+                                        }>Ciclo {index+1}</Text>
                                     </View>
                                     
                                     <View style={style.excluir}>

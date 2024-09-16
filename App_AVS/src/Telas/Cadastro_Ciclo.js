@@ -1,4 +1,4 @@
-import { Text, View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native'
+import { Text, View, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, ScrollView, StatusBar, ActivityIndicator, FlatList } from 'react-native'
 import { useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker'
 import React, { useState, useContext, useEffect } from 'react'
@@ -11,32 +11,40 @@ import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 export default ({navigation}) => {
     const { user } = useContext(AuthContext)
-    const route = useRoute()
     const dataAtual = new Date({})
     const [selectedAve, setSelectedAve] = useState("Galinha");
     const [qtdOvos, setqtdOvos] = useState(0)
     const [incubadora, setIncubadora] = useState(null)
-    
+    const [loading, setLoading] = useState(true)
+    const [listaIncubadoras, setListaIncubadoras] = useState([])
+
     useEffect(() => {
-        if(route.params){
-            setIncubadora(route.params.data)
+        function consultaIncubadoras() {
+            firebase.database().ref(`usuarios/${user.uid}/incubadoras`).on('value', snapshot => {
+                if (snapshot.exists()) {
+                    let lista = [];
+                    snapshot.forEach(value => {
+                        // console.log(value.val()[noIncubadora]);
+                        lista.push({
+                            ciclo: value.val().ciclo || null,
+                            key: value.val().uid
+                        });
+                    });
+                    setListaIncubadoras(lista);
+                    setLoading(false);
+                } else {
+                    setLoading(false);
+                    setListaIncubadoras([]);
+                }
+            });
         }
-    }, [route.params])
-
-    
-
+        consultaIncubadoras();
+    }, []);
 
     async function criaCiclo(){
         // Fazer validação de campos
 
         // Testando se incubadora já possui um ciclo
-        firebase.database().ref('incubadoras').child(incubadora).once('value', snapshot => {
-            if(snapshot.exists()){
-                if(snapshot.val().ciclo){
-                    setIncubadora(null)
-                }
-            }
-        })
         try{
             // Cria UID
             const uid = firebase.database().ref('ciclos').push().key
@@ -55,6 +63,7 @@ export default ({navigation}) => {
             firebase.database().ref('incubadoras').child(incubadora).update({
                 ciclo: uid
             })
+
             navigation.navigate('lista_ciclo')
         }
         catch(e){
@@ -64,6 +73,7 @@ export default ({navigation}) => {
     }
     return(    
         <KeyboardAvoidingView style={styles.background}>
+            <StatusBar backgroundColor={'#13386E'}/>
              <ScrollView style={{ width: '100%',}}>
                 <View style={styles.Logo}>
                     <Image style={styles.Image_Logo}
@@ -119,14 +129,14 @@ export default ({navigation}) => {
                         <Text style={styles.Texto}>Temperatura ideal</Text>
                     </View>
                     <View style={styles.Input_False}> 
-                        <Text style={styles.Texto}>37</Text>
+                        <Text style={styles.Texto}>36C° - 37C°</Text>
                     </View>
 
                     <View style={styles.Text_campo}> 
                         <Text style={styles.Texto}>Umidade ideal</Text>
                     </View>
                     <View style={styles.Input_False}> 
-                        <Text style={styles.Texto}>60</Text>
+                        <Text style={styles.Texto}>55% - 65%</Text>
                     </View>
 
                     <View style={styles.Text_campo}> 
@@ -156,22 +166,10 @@ export default ({navigation}) => {
                     </View>
                     : 
                     (<>
-                        <TouchableOpacity 
-                            style={{backgroundColor:'#666666',
-                                width:'90%',
-                                height: 52,
-                                alignItems: 'center',
-                                justifyContent:'center',
-                                borderRadius: 8,
-                                flexDirection: 'row',
-                                gap: 10,
-                                marginTop: 25,
-                                marginBottom: 4,}}
-                            onPress={() => navigation.navigate('scanner') }>
-                            <Text style={styles.Texto_entrar}>Vincular incubadora</Text>
-                            <MaterialCommunityIcons name="qrcode-scan" size={25} color="#fff" />
-                        </TouchableOpacity>
-                        <Text>É necessário vincular uma incubadora ao seu ciclo</Text>
+                        <FlatList 
+                            
+                        />
+                        <Text>É necessário selecionar uma incubadora para seu ciclo</Text>
                     </>)
                 }
 
