@@ -6,7 +6,6 @@ import { AuthContext } from "../context/auth";
 
 export default ({navigation}) => {
   const [permissao, setPermissao] = useCameraPermissions()
-  const [incubadora, setIncubadora] = useState(false)
   const [scanned, setScanned] = useState(false)
   const { user } = useContext(AuthContext)
 
@@ -66,13 +65,7 @@ export default ({navigation}) => {
         firebase.database().ref('incubadoras').child(data).once('value', async (snapshot) => {
             if(snapshot.exists()){
               // Atribuindo a incubadora escaneada ao usuário
-              const uidIncubadora = firebase.database().ref(`usuarios/${user.uid}/incubadoras`).push().key
-              firebase.database().ref(`usuarios/${user.uid}/incubadoras`).child(uidIncubadora).set({
-                  uid: data,
-              })
-
-              alert('Incubadora escaneada')
-              navigation.goBack()
+              navigation.navigate('lista_incubadoras', {data: data})
             }else{
               Alert.alert(
                 'Incubadora não encontrada!',
@@ -98,7 +91,6 @@ export default ({navigation}) => {
   }
 
 
-
   if(!permissao?.granted){
     return(
       <View style={styles.container}>
@@ -110,6 +102,7 @@ export default ({navigation}) => {
 
   return(
     <View style={{ flex: 1 }}>
+        
         <StatusBar />
         <CameraView style={{ flex: 1 }} onBarcodeScanned={scanned ? undefined : handledBarCodeScanned}>
         <View style={styles.layerContainer}>
