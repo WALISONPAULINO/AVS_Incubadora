@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import {Text, View, KeyboardAvoidingView, StatusBar, StyleSheet, ActivityIndicator } from 'react-native'
+import {Text, View, KeyboardAvoidingView, StatusBar, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRoute } from '@react-navigation/native';
 import styles from './Styles_Index'
@@ -57,12 +57,20 @@ export default ({navigation}) => {
         )
     }
 
+    async function excluiCiclo(uid){
+        await firebase.database().ref('ciclos').child(uid).remove()
+        .then((r)=>{
+            setListaCiclos(prevState => prevState.filter(item => item.key !== uid))
+        })
+        .catch((e)=>{console.log(e)})
+    }
+
     return (
 
         <KeyboardAvoidingView style={styles.background}>
             <StatusBar backgroundColor={'#13386E'}/>
             {/* Dashboard */}    
-
+            <ScrollView contentContainerStyle={{ flexGrow: 1, width: '100%', alignItems: 'center' }}>
             <View style={HomeStyles.View_info}>
                 <View style={HomeStyles.container_titulo}>
                     <MaterialCommunityIcons name="layers-triple" size={25} color="#fff" style={{marginTop:10, marginRight:5}} />
@@ -176,7 +184,35 @@ export default ({navigation}) => {
                     </View>
 
                 </View>
+                
+                <View style={{         
+                    width:'100%',
+                    height: 74,
+                    borderRadius: 8,
+                    flexDirection: 'row', 
+                    justifyContent: 'flex-start',
+                    marginBottom:22 
+                }}>
+                <TouchableOpacity
+                style={{
+                    backgroundColor: '#a52a2a',
+                    width: '100%',
+                    height: 52,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 8,
+                    flexDirection: 'row',
+                    gap: 10,
+                    marginTop: 20,
+                }}
+                onPress={() => navigation.navigate('scanner')}>
+                <Text style={styles.Texto_entrar}>Encerrar ciclo</Text>
+                <MaterialCommunityIcons name="close" size={25} color="#fff" />
+            </TouchableOpacity>
+                </View>
+
             </View>
+            </ScrollView>
         </KeyboardAvoidingView>
     );
 }

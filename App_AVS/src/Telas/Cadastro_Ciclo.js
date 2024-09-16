@@ -52,6 +52,7 @@ export default ({navigation}) => {
         const regex = /[.#$\[\]]/g;
         if(regex.test(selectedIncubadora)){
             alert('Selecione uma incubadora para seu ciclo')
+            return;
         }
         // Testando se incubadora já possui um ciclo
         try{

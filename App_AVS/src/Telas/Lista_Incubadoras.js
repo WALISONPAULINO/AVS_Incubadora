@@ -18,7 +18,6 @@ export default ({navigation}) => {
     useEffect(() => {
         if(route.params && route.params.data){
             setIncubadoraScan(route.params.data)
-            console.log('Passei aqui')
             setModalVisible(true);
         }
     }, [route.params])
