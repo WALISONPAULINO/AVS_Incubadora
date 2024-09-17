@@ -105,7 +105,7 @@ export default style = StyleSheet.create({
     Ciclos:{
         width:'100%',
         height:'100%',
-        justifyContent:'center',
+        justifyContent:'space-around',
         alignItems:'center',
         marginLeft:2,
         flexDirection:'row',

@@ -1,11 +1,14 @@
 import React, { createContext, useState, useEffect } from "react";
+import { Alert } from "react-native";
 import firebase from "../services/firebaseConnection"
 import AsyncStorage from "@react-native-community/async-storage";
+import { useNavigation } from '@react-navigation/native'; // Importar o hook
 
 export const AuthContext = createContext({})
 export default ({ children }) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
+    const navigation = useNavigation();
 
     useEffect(()=>{
         async function loadStorage() {
@@ -46,8 +49,20 @@ export default ({ children }) => {
                 nome: nome,
             })
             let data = { uid: uid, nome: nome, email: usuario.user.email }
-            // storageUser(data)
-            setUser(data)
+            Alert.alert(
+                'Cadastro realizado com sucesso!',
+                'Faça login',
+                [
+                  {
+                    text: 'OK',
+                    style: 'destructive',
+                  },
+                ],
+                {
+                  cancelable: false,
+                },
+              );
+            navigation.navigate('login')
         }catch(e){
             alert(e)
         }
@@ -60,7 +75,7 @@ export default ({ children }) => {
     }
 
     return(
-        <AuthContext.Provider value={{ signed: !!user, user, loading, login, cadastro }}>
+        <AuthContext.Provider value={{ signed: !!user, user, loading, login, cadastro, setUser }}>
             {children}
         </AuthContext.Provider>
     )

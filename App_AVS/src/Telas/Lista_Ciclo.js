@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { View, Text, FlatList, StatusBar, SafeAreaView, ActivityIndicator } from "react-native"
 import firebase from "../services/firebaseConnection"
 import { AuthContext } from "../context/auth"
-import { Button } from "react-native";
+
 import style from './Styles_cadastro'
 import { TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons"
@@ -29,12 +29,14 @@ export default ({navigation}) => {
 
                         lista.push({
                             ciclo: valor,
-                            key: value.key
+                            key: value.key,
+                            incubadora: valor.incubadora
                         })
 
                     })
                     setCiclo(true)
                     setListaCiclos(lista)
+
                     setLoading(false)
 
                 }else{
@@ -50,6 +52,8 @@ export default ({navigation}) => {
         consultaCiclo()
     },[])
 
+
+
     if(loading){
         return(
             <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
@@ -58,16 +62,6 @@ export default ({navigation}) => {
             </View>
         )
     }
-
-
-    async function excluiCiclo(uid){
-        await firebase.database().ref('ciclos').child(uid).remove()
-        .then((r)=>{
-            setListaCiclos(prevState => prevState.filter(item => item.key !== uid))
-        })
-        .catch((e)=>{console.log(e)})
-    }
-
     return(
         <View style={{backgroundColor: '#fff', alignItems: 'center', flex:1, justifyContent:'center'}}>
             <StatusBar backgroundColor={'#13386E'}/>
@@ -92,16 +86,18 @@ export default ({navigation}) => {
                             <View style={style.container_andamento}>
                                 <View style={style.Ciclos}>
                                     <View style={style.idCiclos}>
-                                        <MaterialCommunityIcons name="layers-triple" size={20} color="black" style={{marginRight:10}}/>
-                                        <Text style={style.nomeCiclo} onPress={() => {
-                                            navigation.navigate('dashboard', { item: item.key, ciclo: item.ciclo })
-                                            }
-                                        }>Ciclo {index+1}</Text>
+                                        <View>
+                                            <Text style={style.nomeCiclo}>Ciclo {index+1}</Text>
+                                            <Text style={style.nomeCiclo}>{item.incubadora ? item.incubadora.nome : 'Carregando'}</Text>
+                                        </View>
                                     </View>
                                     
-                                    <View style={style.excluir}>
-                                        <Text style={style.Nvisualizar} onPress={() => excluiCiclo(item.key)}>Visualizar</Text>
-                                    </View>
+                                    <TouchableOpacity style={style.excluir}
+                                        onPress={() => {
+                                            navigation.navigate('dashboard', { key: item.key, ciclo: item.ciclo, incubadora: item.incubadora.uid })
+                                        }}>
+                                        <Text style={style.Nvisualizar}>Visualizar</Text>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                             

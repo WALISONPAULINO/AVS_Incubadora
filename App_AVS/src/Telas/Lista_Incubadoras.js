@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StatusBar, TouchableOpacity, FlatList, ActivityIndicator, Modal, TextInput, StyleSheet } from "react-native";
+import { View, Text, StatusBar, TouchableOpacity, FlatList, ActivityIndicator, Modal, TextInput, StyleSheet, Button, Alert } from "react-native";
 import { AuthContext } from "../context/auth";
 import firebase from "../services/firebaseConnection";
 import estilos from './Styles_Index';
@@ -46,13 +46,42 @@ export default ({navigation}) => {
         consultaIncubadoras();
     }, []);
 
-    function atribuiIncubadora(){
+    async function atribuiIncubadora(){
         const uidIncubadora = firebase.database().ref(`usuarios/${user.uid}/incubadoras`).push().key
         firebase.database().ref(`usuarios/${user.uid}/incubadoras`).child(uidIncubadora).set({
             nome: inputValue,
             uid: incubadoraScan,
         })
+        await firebase.database().ref(`incubadoras/${incubadoraScan}`).update({
+            nome: inputValue,
+        })
         navigation.setParams({ data: undefined });
+    }
+
+    async function excluiIncubadora(uidIncubadora){
+        firebase.database().ref(`usuarios/${user.uid}/incubadoras`).orderByChild('uid').equalTo(uidIncubadora).once('value', snapshot => {
+            snapshot.forEach(value => {
+                const incubadoraKey = value.key
+                if(value.val().ciclo){
+                    Alert.alert(
+                        'Aviso:',
+                        'Você não pode excluir uma incubadora com um ciclo em andamento!',
+                        [
+                          {
+                            text: 'OK',
+                            style: 'destructive',
+                          },
+                        ],
+                        {
+                          cancelable: false,
+                        },
+                      );
+                }else{
+                    firebase.database().ref(`usuarios/${user.uid}/incubadoras/${incubadoraKey}`).remove()
+                }
+            })
+        })
+        await firebase.database().ref(`incubadoras/${uidIncubadora}`).child('nome').remove()
     }
 
     if (loading) {
@@ -74,8 +103,9 @@ export default ({navigation}) => {
                     keyExtractor={item => item.key}
                     renderItem={({ item }) => (
                         <View>
-                            <Text style={{ fontSize: 20, color: 'black' }}>Nome da Incubadora: {item.nome}</Text>
-                            <Text style={{ fontSize: 16, color: item.ciclo ? 'red' : 'green' }}>{item.ciclo ? 'Ciclo em execução' : 'Livre'}</Text>
+                            <Text style={{ fontSize: 20, color: 'black' }}>Nome: {item.nome}</Text>
+                            <Text style={{ fontSize: 16, color: item.ciclo ? 'red' : 'green' }}>{item.ciclo ? 'Ciclo em andamento' : 'Livre'}</Text>
+                            <Button title="Excluir incubadora" onPress={ () => { excluiIncubadora(item.key) } } />
                         </View>
                     )}
                 />

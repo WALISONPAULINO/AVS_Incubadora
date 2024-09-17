@@ -121,15 +121,5 @@ export default HomeStyles = StyleSheet.create({
         elevation:20
     },
 
-    button_sair:{
-        backgroundColor:'#BB4B4B',
-        width:'90%',
-        height: 55,
-        borderRadius:8,
-        marginTop:50,
-        elevation:20,
-        alignItems:'center',
-        justifyContent:'center'
-    }
   });
   

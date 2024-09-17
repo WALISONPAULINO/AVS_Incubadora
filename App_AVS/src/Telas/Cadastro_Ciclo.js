@@ -8,14 +8,30 @@ import { AuthContext } from '../context/auth'
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 export default ({navigation}) => {
+    
+    const dataAtual = new Date();
+
+    // Obter a data atual + 21 dias
+    const dataMais21Dias = new Date();
+    dataMais21Dias.setDate(dataAtual.getDate() + 21);
+
+    // Formatar as datas (opcional)
+    const opcoes = { year: 'numeric', month: '2-digit', day: '2-digit' };
+
+    const dataAtualFormatada = dataAtual.toLocaleDateString('pt-BR', opcoes);
+    const dataMais21DiasFormatada = dataMais21Dias.toLocaleDateString('pt-BR', opcoes);
+
+
+
+
     const { user } = useContext(AuthContext)
-    const dataAtual = new Date({})
     const [selectedAve, setSelectedAve] = useState("Galinha");
     const [qtdOvos, setqtdOvos] = useState(0)
-    const [incubadora, setIncubadora] = useState(null)
     const [loading, setLoading] = useState(true)
     const [listaIncubadoras, setListaIncubadoras] = useState([])
     const [selectedIncubadora, setSelectedIncubadora] = useState('');
+
+
 
     useEffect(() => {
         function consultaIncubadoras() {
@@ -24,16 +40,13 @@ export default ({navigation}) => {
                     let lista = [];
                     snapshot.forEach(value => {
                         if(!value.val().ciclo){
-                            console.log('Passei aqui')
                             lista.push({
                                 key: value.val().uid,
                                 nome: value.val().nome
                             });
-                            console.log('Não tem ciclo')
                         }
                         else{
-                            setListaIncubadoras(false)
-                            console.log('Tem ciclo')
+                            setListaIncubadoras([])
                         }
                     });
                     setListaIncubadoras(lista);
@@ -63,20 +76,27 @@ export default ({navigation}) => {
                 especie: selectedAve,
                 qtdOvos: Number(qtdOvos),
                 rotacao: 'Obj Date',
-                dtInicio: 'Obj Date',
-                dtFim: 'Obj Date',
-                incubadora: selectedIncubadora,
+                dtInicio: dataAtualFormatada,
+                dtFim: dataMais21DiasFormatada,
                 usuario: user.uid
             })
-            console.log('Cheguei aqui 1')
+            console.log('Passei aqui')
+            // to tendo problemas quando chega nessa consulta
+            await firebase.database().ref(`incubadoras/${selectedIncubadora}`).once('value', async (snapshot) => {
+                await firebase.database().ref(`ciclos/${uid}/incubadora`).set({
+                    uid: selectedIncubadora,
+                    nome: snapshot.val().nome
+                })
+            })
+
             console.log(selectedIncubadora)
+            console.log('Cheguei aqui')
             // Atribuindo o ciclo criado a incubadora escaneada
             firebase.database().ref('incubadoras').child(selectedIncubadora).update({
                 ciclo: uid
             })
 
             // Atualizando incubadora na tabela do usuário
-            console.log('Cheguei aqui 2')
             firebase.database().ref(`usuarios/${user.uid}/incubadoras`).orderByChild('uid').equalTo(selectedIncubadora).once('value', snapshot => {
                 snapshot.forEach(value => {
                     const incubadoraKey = value.key
@@ -191,14 +211,17 @@ export default ({navigation}) => {
                             </Picker>
                         </View>
                     </>)
-                    : <Text>Você não possui nenhuma incubadora disponível. Escaneie uma incubadora na seção Incubadoras!</Text>
+                    : <View style={{width: '80%', marginTop: 20, marginBottom: 20}}><Text>Você não possui nenhuma incubadora disponível. Escaneie uma incubadora na seção Incubadoras!</Text></View>
                 }
 
-                    <TouchableOpacity 
+                {  
+                listaIncubadoras.length > 0 &&          
+                    (<TouchableOpacity 
                         style={styles.Botao_entrar}
                         onPress={criaCiclo}>
                         <Text style={styles.Texto_entrar}>Criar ciclo</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity>)
+                }
                 </View>
              </ScrollView>
             

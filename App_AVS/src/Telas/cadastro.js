@@ -55,6 +55,7 @@ export default ({ navigation }) => {
           <TextInput
             onChangeText={(texto) => setSenha(texto)}
             style={styles.Input_email}
+            secureTextEntry={true}
             placeholder="Digite sua senha"
           />
 
@@ -66,6 +67,7 @@ export default ({ navigation }) => {
             onChangeText={(texto) => setConfirmarSenha(texto)}
             style={styles.Input_senha}
             placeholder="Digite sua senha"
+            secureTextEntry={true}
           />
 
           {/* Vou precisar criar um aviso aqui para dizer que as senhas precisam ser iguais */}

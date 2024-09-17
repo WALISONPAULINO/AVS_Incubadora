@@ -20,11 +20,13 @@ export default ({navigation}) => {
     const route = useRoute();
 
     useEffect(() => {
-        if (route.params && route.params.item) {
+        if (route.params && route.params.key) {
+            console.log(route.params)
             // Recebe ID da incubadora a partir dos parâmetros enviados da lista ciclo pelo navigation
-            setuidIncubadora(route.params.ciclo.incubadora)
+            setuidIncubadora(route.params.incubadora)
             // Recebe informações do ciclo passados por parâmetros
             setCiclo(route.params.ciclo)
+            console.log(route.params.ciclo)
             setLoading(false)
         }
     }, [route.params]);
@@ -41,6 +43,7 @@ export default ({navigation}) => {
                 setIncubadora(null)
                 if(snapshot.exists()){
                     setIncubadora(snapshot.val())
+                    console.log(snapshot.val())
                 }
                 setLoading(false)
             })
@@ -48,6 +51,27 @@ export default ({navigation}) => {
         consultaIncubadora()
       }
     }, [uidIncubadora])
+
+
+    function calcularDiferencaDias(dataInicial, dataFinal) {
+        // Converter as strings para o formato Date
+        const [diaInicial, mesInicial, anoInicial] = dataInicial.split('/');
+        const [diaFinal, mesFinal, anoFinal] = dataFinal.split('/');
+    
+        // Criar objetos Date usando o formato YYYY-MM-DD
+        const dataInicio = new Date(`${anoInicial}-${mesInicial}-${diaInicial}`);
+        const dataFim = new Date(`${anoFinal}-${mesFinal}-${diaFinal}`);
+    
+        // Calcular a diferença de tempo em milissegundos
+        const diffTime = dataFim - dataInicio;
+    
+        // Converter de milissegundos para dias (1 dia = 24 * 60 * 60 * 1000 ms)
+        const diffDias = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+        return diffDias;
+    }
+
+
     
     if(loading){
         return(
@@ -57,14 +81,19 @@ export default ({navigation}) => {
         )
     }
 
-    async function excluiCiclo(uid){
-        await firebase.database().ref('ciclos').child(uid).remove()
-        .then((r)=>{
-            setListaCiclos(prevState => prevState.filter(item => item.key !== uid))
+    // PRECISO REMOVER DADOS DE USUÁRIO, CICLOS E INCUBADORAS
+    async function excluiCiclo(){
+        await firebase.database().ref('ciclos').child(route.params.key).remove()
+        await firebase.database().ref(`usuarios/${user.uid}/incubadoras`).orderByChild('uid').equalTo(uidIncubadora).once('value', snapshot => {
+            if(snapshot.exists()){
+                snapshot.forEach(value => {
+                    value.ref.child('ciclo').remove()
+                })
+            }
         })
-        .catch((e)=>{console.log(e)})
+        await firebase.database().ref(`incubadoras/${uidIncubadora}/ciclo`).remove()
+        navigation.goBack()
     }
-
     return (
 
         <KeyboardAvoidingView style={styles.background}>
@@ -85,7 +114,7 @@ export default ({navigation}) => {
 
                     <View style={HomeStyles.container_ciclos}>
                         <MaterialCommunityIcons name="calendar-month" size={25} color="#fff" />
-                        <Text style={HomeStyles.Campos}>Data inicial:01/08/2003</Text>
+                        <Text style={HomeStyles.Campos}>Data inicial: {ciclo ? ciclo.dtInicio : 'Carregando'}</Text>
                     </View>
 
                     <View style={HomeStyles.container_ciclos}>
@@ -94,7 +123,7 @@ export default ({navigation}) => {
                     </View>
 
                     <View style={HomeStyles.container_ciclos}>
-                        <Text style={HomeStyles.campo_dias}>Faltam 10 dias para a eclosão dos ovos</Text>
+                        <Text style={HomeStyles.campo_dias}>Faltam {ciclo ? calcularDiferencaDias(ciclo.dtInicio, ciclo.dtFim) : ''} dias para a eclosão dos ovos</Text>
                     </View>
                 </View>
             </View>
@@ -124,7 +153,7 @@ export default ({navigation}) => {
                         ? (
                             incubadora.temperatura >= 36 & incubadora.temperatura <= 37
                             ? "Ideal" 
-                            : incubadora.temperatura > 36 ? "Acima" : "Abaixo"
+                            : incubadora.temperatura > 36 ? "Alta" : "Baixa"
                         ) : ''
                         }</Text>
                     </View>
@@ -156,7 +185,7 @@ export default ({navigation}) => {
                         ? (
                             incubadora.umidade >= 55 & incubadora.umidade <= 65
                             ? "Ideal" 
-                            : incubadora.umidade > 55 ? "Acima" : "Abaixo"
+                            : incubadora.umidade > 55 ? "Alta" : "Baixa"
                         ) : ''
                         }</Text>
                     </View>
@@ -205,7 +234,7 @@ export default ({navigation}) => {
                     gap: 10,
                     marginTop: 20,
                 }}
-                onPress={() => navigation.navigate('scanner')}>
+                onPress={() => excluiCiclo()}>
                 <Text style={styles.Texto_entrar}>Encerrar ciclo</Text>
                 <MaterialCommunityIcons name="close" size={25} color="#fff" />
             </TouchableOpacity>
