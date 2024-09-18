@@ -129,7 +129,7 @@ export default ({navigation}) => {
                     <Text style={style.Texto_ciclo}>de incubação</Text>
                 </View>
 
-                <View style={style.container_picker}>
+                <View style={style.container_picker_2}>
                     <Text style={style.label}>Espécie</Text>
                     
                     <Picker
@@ -189,30 +189,32 @@ export default ({navigation}) => {
                         <Text style={styles.Texto}>A cada 4h</Text>
                     </View>
 
-                {  
-                    listaIncubadoras.length > 0 
-                    /* Se a lista de incubadoras não possui elementos significa que 
-                    nenhuma incubadora pode ser selecionada para o ciclo */
-                    ?
-                    (<>
+                    <View style={{width:'90%'}}>
+                        {  
+                        listaIncubadoras.length > 0 
+                        /* Se a lista de incubadoras não possui elementos significa que 
+                        nenhuma incubadora pode ser selecionada para o ciclo */
+                        ?
+                        (<>
 
-                        <Text>É necessário selecionar uma incubadora para seu ciclo</Text>
-                        <View style={style.container_picker}>
-                            <Picker
-                                selectedValue={selectedIncubadora}
-                                style={style.picker}
-                                onValueChange={(itemValue) => setSelectedIncubadora(itemValue)} // Atualiza incubadora selecionada
-                            >
-                                {/* Mapeia a lista de incubadoras para o Picker */}
-                                <Picker.Item key={1} label='Selecione uma incubadora' value='#$[]]g;' />
-                                {listaIncubadoras.map((incubadora) => (
-                                    <Picker.Item key={incubadora.key} label={incubadora.nome} value={incubadora.key} />
-                                ))}
-                            </Picker>
-                        </View>
-                    </>)
-                    : <View style={{width: '80%', marginTop: 20, marginBottom: 20}}><Text>Você não possui nenhuma incubadora disponível. Escaneie uma incubadora na seção Incubadoras!</Text></View>
+                            <Text>É necessário selecionar uma incubadora para seu ciclo</Text>
+                            <View style={style.container_picker}>
+                                <Picker
+                                    selectedValue={selectedIncubadora}
+                                    style={style.picker}
+                                    onValueChange={(itemValue) => setSelectedIncubadora(itemValue)} // Atualiza incubadora selecionada
+                                >
+                                    {/* Mapeia a lista de incubadoras para o Picker */}
+                                    <Picker.Item key={1} label='Selecione uma incubadora' value='#$[]]g;' />
+                                    {listaIncubadoras.map((incubadora) => (
+                                        <Picker.Item key={incubadora.key} label={incubadora.nome} value={incubadora.key} />
+                                    ))}
+                                </Picker>
+                            </View>
+                        </>)
+                        : <View style={{width: '80%', marginTop: 20, marginBottom: 20}}><Text>Você não possui nenhuma incubadora disponível. Escaneie uma incubadora na seção Incubadoras!</Text></View>
                 }
+                    </View>
 
                 {  
                 listaIncubadoras.length > 0 &&          

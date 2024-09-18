@@ -12,7 +12,7 @@ export default style = StyleSheet.create({
         elevation: 10
       },
 
-    container_picker: {
+    container_picker_2: {
         justifyContent: 'center',
         width:'90%',
         marginLeft:20,
@@ -31,6 +31,7 @@ export default style = StyleSheet.create({
         elevation: 10,
         marginBottom:15
     },
+    
        
     Container_tipos:{
         flex:1,
@@ -49,20 +50,20 @@ export default style = StyleSheet.create({
     },
 
     container_nome:{
-        marginTop: 150,
-        marginBottom: 50,
+        marginTop: 90,
         width: '90%',
         flex:1,
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent:'center',
     }, 
 
     sem_ciclo:{
         fontSize:14,
-        marginTop: 30
+        marginTop: 1,
     },
 
     container_ciclo_D:{
-        flex:2,
+        flex:3,
         width:'90%',
         alignItems:'center',
     },
@@ -72,14 +73,14 @@ export default style = StyleSheet.create({
         width:'90%',
         justifyContent:'space-between',
         alignItems:'flex-end',
-        flex:1
+        flex:1,
     },
 
     botao_ciclo:{
         width:'20%',
-        height: '50%',
+        height: '60%',
         backgroundColor:'#14386d',
-        borderRadius:50,
+        borderRadius:20,
         marginBottom:50,
         alignItems:'center',
         justifyContent:'center'
@@ -112,18 +113,17 @@ export default style = StyleSheet.create({
     },
 
     idCiclos:{
-        width:'50',
+        width:'50%',
         flexDirection:'row',
     },
 
     excluir:{
         backgroundColor:'#13386E',
-        width:'30%',
+        width:'40%',
         height:50,
         alignItems:'center',
         justifyContent:'center',
         borderRadius:8,
-        marginLeft: 10
     },
 
     Nvisualizar:{
@@ -131,6 +131,6 @@ export default style = StyleSheet.create({
     },
 
     nomeCiclo:{
-        fontSize:15
+        fontSize:20
     }
   });

@@ -96,17 +96,47 @@ export default ({navigation}) => {
     return (
         <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: '#fff' }}>
             <StatusBar backgroundColor={'#13386E'} />
-            <Text style={{ fontSize: 20 }}>Incubadoras escaneadas:</Text>
+            <Text style={{ fontSize: 20, marginBottom:20 }}>Incubadoras escaneadas</Text>
             {listaIncubadoras.length > 0 ? (
                 <FlatList
                     data={listaIncubadoras}
                     keyExtractor={item => item.key}
                     renderItem={({ item }) => (
-                        <View>
-                            <Text style={{ fontSize: 20, color: 'black' }}>Nome: {item.nome}</Text>
-                            <Text style={{ fontSize: 16, color: item.ciclo ? 'red' : 'green' }}>{item.ciclo ? 'Ciclo em andamento' : 'Livre'}</Text>
-                            <Button title="Excluir incubadora" onPress={ () => { excluiIncubadora(item.key) } } />
+                        <View style={{ width:350, borderRadius:8, height:'100%', alignItems:'center', justifyContent:'center', padding:5,}}>
+                            <View style={{flexDirection:'row'}}>
+                                <View style={{backgroundColor:'#13386E', width:'35%', alignItems:'center', margin:4}}>
+                                    <Text style={{ fontSize: 20, color: 'white' }}>Nome</Text>
+                                </View>
+                                
+                                <View style={{backgroundColor:'#13386E', width:'35%', alignItems:'center', margin:4}}>
+                                    <Text style={{ fontSize: 20, color: 'white' }}>Status</Text>
+                                </View>
+                            
+                                <View style={{alignItems:'center', width:'25%', backgroundColor:'#13386E',  margin:4}}>
+                                    <Text style={{ fontSize: 20, color: 'white' }}>Ação</Text>
+                                </View>
+                            </View>
+
+                            <View style={{flexDirection:'row'}}>
+                                <View  style={{width:'35%',  margin:4, alignItems:'center', borderWidth:1, justifyContent:'center'}}>
+                                     <Text style={{ fontSize: 16, color: 'black' }}>{item.nome}</Text>
+                                </View>
+
+                                <View style={{width:'35%',  margin:4, alignItems:'center', borderWidth:1, justifyContent:'center'}}>
+                                    <Text style={{ fontSize: 14, color: item.ciclo ? 'red' : 'green' }}>{item.ciclo ? 'Ciclo em andamento' : 'Livre'}</Text>
+                                </View>
+
+                                <View style={{width:'25%',  margin:4, alignItems:'center', justifyContent:'center'}}>
+                                    <TouchableOpacity style={{backgroundColor:'#BB4B4B', width:'100%', padding:4, alignItems:'center', borderRadius:4}}
+                                        title="Excluir" onPress={ () => { excluiIncubadora(item.key) } }
+                                    >
+                                        <Text style={{color:'white'}}>Excluir</Text>
+                                    </TouchableOpacity>
+                                    {/* <Button title="Excluir" onPress={ () => { excluiIncubadora(item.key) } } /> */}
+                                </View>
+                            </View>
                         </View>
+                           
                     )}
                 />
             ) : (
