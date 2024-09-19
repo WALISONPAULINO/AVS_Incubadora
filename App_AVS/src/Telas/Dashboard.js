@@ -21,12 +21,10 @@ export default ({navigation}) => {
 
     useEffect(() => {
         if (route.params && route.params.key) {
-            console.log(route.params)
             // Recebe ID da incubadora a partir dos parâmetros enviados da lista ciclo pelo navigation
             setuidIncubadora(route.params.incubadora)
             // Recebe informações do ciclo passados por parâmetros
             setCiclo(route.params.ciclo)
-            console.log(route.params.ciclo)
             setLoading(false)
         }
     }, [route.params]);
@@ -43,7 +41,6 @@ export default ({navigation}) => {
                 setIncubadora(null)
                 if(snapshot.exists()){
                     setIncubadora(snapshot.val())
-                    console.log(snapshot.val())
                 }
                 setLoading(false)
             })
@@ -142,16 +139,16 @@ export default ({navigation}) => {
                         <Text style={HomeStyles.Titulo_sensor}>Temperatura</Text>
                         {/*  */}
                         <Text style={
-                            { fontSize:18, color: incubadora && incubadora.temperatura >= 36 && incubadora.temperatura <= 37 
+                            { fontSize:18, color: incubadora && incubadora.temperatura >= 36 && incubadora.temperatura <= 38 
                                 ? '#15A64F'  // Verde para "Ideal"
-                                : incubadora && incubadora.temperatura > 37
+                                : incubadora && incubadora.temperatura > 38
                                     ? 'red'    // Vermelho para "Acima"
                                     : 'blue'   // Azul para "Abaixo" 
                             }}>
                         {
                         incubadora 
                         ? (
-                            incubadora.temperatura >= 36 & incubadora.temperatura <= 37
+                            incubadora.temperatura >= 36 & incubadora.temperatura <= 38
                             ? "Ideal" 
                             : incubadora.temperatura > 36 ? "Alta" : "Baixa"
                         ) : ''
@@ -205,11 +202,11 @@ export default ({navigation}) => {
 
                     <View style={HomeStyles.Container_tipo}>
                         <Text style={HomeStyles.Titulo_sensor}>Rotação</Text>
-                        <Text style={HomeStyles.Subtitulo_sensor}>Ligada</Text>
+                        <Text style={HomeStyles.Subtitulo_sensor}>Desligada</Text>
                     </View>
 
                     <View style={HomeStyles.Container_dados}>
-                        <Text style={HomeStyles.Titulo_dados_rotacao}>Próxima a 2h</Text>
+                        <Text style={HomeStyles.Titulo_dados_rotacao}>--</Text>
                     </View>
 
                 </View>

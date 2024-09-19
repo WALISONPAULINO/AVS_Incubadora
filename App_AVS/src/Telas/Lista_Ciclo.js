@@ -5,7 +5,6 @@ import { AuthContext } from "../context/auth"
 
 import style from './Styles_cadastro'
 import { TouchableOpacity } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 // PÁGINA INICIAL APÓS LOGIN
 
@@ -32,7 +31,6 @@ export default ({navigation}) => {
                             key: value.key,
                             incubadora: valor.incubadora
                         })
-
                     })
                     setCiclo(true)
                     setListaCiclos(lista)

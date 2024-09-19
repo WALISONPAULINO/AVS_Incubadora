@@ -5,7 +5,6 @@ import styles from './Styles_Index'
 import style from './Styles_cadastro'
 import firebase from '../services/firebaseConnection'
 import { AuthContext } from '../context/auth'
-import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 export default ({navigation}) => {
     
@@ -80,7 +79,6 @@ export default ({navigation}) => {
                 dtFim: dataMais21DiasFormatada,
                 usuario: user.uid
             })
-            console.log('Passei aqui')
             // to tendo problemas quando chega nessa consulta
             await firebase.database().ref(`incubadoras/${selectedIncubadora}`).once('value', async (snapshot) => {
                 await firebase.database().ref(`ciclos/${uid}/incubadora`).set({
@@ -90,7 +88,6 @@ export default ({navigation}) => {
             })
 
             console.log(selectedIncubadora)
-            console.log('Cheguei aqui')
             // Atribuindo o ciclo criado a incubadora escaneada
             firebase.database().ref('incubadoras').child(selectedIncubadora).update({
                 ciclo: uid
@@ -158,14 +155,14 @@ export default ({navigation}) => {
                         <Text style={styles.Texto}>Data Inicial</Text>
                     </View>
                     <View style={styles.Input_False}> 
-                        <Text>20/08/22</Text>
+                        <Text>{dataAtualFormatada}</Text>
                     </View>
 
                     <View style={styles.Text_campo}> 
                         <Text style={styles.Texto}>Data prevista de término</Text>
                     </View>
                     <View style={styles.Input_False}> 
-                        <Text>20/08/22</Text>
+                        <Text>{dataMais21DiasFormatada}</Text>
                     </View>
 
                     <View style={styles.Text_campo}> 

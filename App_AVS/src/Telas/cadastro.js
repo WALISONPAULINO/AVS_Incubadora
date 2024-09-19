@@ -59,16 +59,7 @@ export default ({ navigation }) => {
             placeholder="Digite sua senha"
           />
 
-          {/* Campo para confirmar senha */}
-          <View style={styles.Text_campo}>
-            <Text style={styles.Texto}>Confirme sua senha</Text>
-          </View>
-          <TextInput
-            onChangeText={(texto) => setConfirmarSenha(texto)}
-            style={styles.Input_senha}
-            placeholder="Digite sua senha"
-            secureTextEntry={true}
-          />
+
 
           {/* Vou precisar criar um aviso aqui para dizer que as senhas precisam ser iguais */}
 

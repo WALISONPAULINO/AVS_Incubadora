@@ -43,6 +43,11 @@ export default ({navigation}) => {
       navigation.goBack()
       return;
     }
+    firebase.database().ref('incubadoras').child(data).once('value', snapshot => {
+      if(snapshot.val().nome){
+        
+      }
+    })
 
     firebase.database().ref(`usuarios/${user.uid}`).child('incubadoras').orderByChild(data).once('value', snapshot => {
       if(snapshot.exists()){
