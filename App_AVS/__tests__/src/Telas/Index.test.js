@@ -1,10 +1,21 @@
-import '@testing-library/react-native/extend-expect';
-import Index from '../../../src/Telas/Index';
-import App from '../../../App';
-import { render, screen } from '@testing-library/react-native';
+import React from 'react';
+import { render } from '@testing-library/react-native';
+import Index from '../../../src/Telas/Index'
 
-describe("Testes de componentes", () => {
-    test("Testando se Index abre através de App. Nesse cenário o usuário está deslogado", () => {
-        render(<App />)
-    })
-})
+describe('Componente Login', () => {
+  test('Testando se renderiza o formulário de login corretamente', () => {
+    const { getByPlaceholderText, getByText } = render(<Index />);
+
+    expect(getByPlaceholderText('Digite seu e-mail')).toBeTruthy();
+    expect(getByPlaceholderText('Digite sua senha')).toBeTruthy();
+    expect(getByText('Entrar')).toBeTruthy();
+  });
+
+  test('Testando se exibe "E-mail" e "Senha" na tela', () => {
+    const { getByText } = render(<Login />);
+    
+    expect(getByText('E-mail')).toBeTruthy();
+    expect(getByText('Senha')).toBeTruthy();
+  });
+
+});
